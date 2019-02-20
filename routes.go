@@ -36,14 +36,36 @@ func move(res http.ResponseWriter, req *http.Request) {
 	}
 
 	manager := game.InitializeBoard(&decoded)
-	findBestFood(*manager)
-	// path, err := manager.FindPath(manager.OurHead, apiEntity.Coord{1, 3})
-	if err != nil {
-		fmt.Printf("ERROR")
-	}
-	manager.GameBoard.Show()
+	foodChannel := make(chan string)
+	var foodDirection string
 
-	lib.Respond(res, api.MoveResponse{Move: apiEntity.Down})
+	go func() {
+		food, noFood := FindBestFood(*manager)
+		if noFood != nil {
+			fmt.Printf("NO FOOD")
+			foodChannel <- ""
+		}
+
+		path, noPathToFood := manager.FindPath(manager.OurHead, *food)
+		if noPathToFood != nil {
+			fmt.Printf("NO PATH TO FOOD")
+			foodChannel <- ""
+		}
+		foodChannel <- lib.DirectionFromCoords(manager.OurHead, path[1])
+	}()
+
+	for i := 0; i < 1; i++ {
+		select {
+		case foodDirection = <-foodChannel:
+			continue
+		}
+	}
+
+	if foodDirection != "" {
+		lib.Respond(res, api.MoveResponse{Move: foodDirection})
+	} else {
+		lib.Respond(res, api.MoveResponse{Move: apiEntity.Down})
+	}
 }
 
 func end(res http.ResponseWriter, req *http.Request) {

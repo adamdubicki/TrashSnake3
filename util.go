@@ -1,40 +1,42 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/FreshworksStudio/bs-go-utils/apiEntity"
 	"github.com/FreshworksStudio/bs-go-utils/game"
+	"github.com/FreshworksStudio/bs-go-utils/lib"
 )
 
-func findBestFood(m game.Manager) apiEntity.Coord {
-	// best := make(map[apiEntity.Coord]apiEntity.Coord)
-	// differential := make(map[apiEntity.Coord]int)
+// FindBestFood - find the food that our snake is closest to
+func FindBestFood(m game.Manager) (*apiEntity.Coord, error) {
 
+	// Create a map for each food -> a snake
+	closestFoodToSnake := make(map[apiEntity.Coord]apiEntity.Coord)
 	for _, food := range m.Req.Board.Food {
-		fmt.Printf("%v\n", food)
+		for _, snake := range m.Req.Board.Snakes {
+			_, exists := closestFoodToSnake[food]
+			if exists == true {
+				if lib.Distance(closestFoodToSnake[food], food) > lib.Distance(snake.Body[0], food) {
+					closestFoodToSnake[food] = snake.Body[0]
+				}
+			} else {
+				closestFoodToSnake[food] = snake.Body[0]
+			}
+		}
 	}
-	return apiEntity.Coord{X: 1, Y: 3}
+	bestFood := (apiEntity.Coord{X: -1, Y: -1})
+	bestFoodDistance := 1000000000
+	_ = bestFood
+	for food := range closestFoodToSnake {
+		if closestFoodToSnake[food] == m.Req.You.Body[0] && lib.Distance(m.Req.You.Body[0], food) < bestFoodDistance {
+			bestFood = food
+			_ = bestFood
+			bestFoodDistance = lib.Distance(m.Req.You.Body[0], food)
+		}
+	}
+	if bestFood.X == -1 {
+		return nil, errors.New("No valid food")
+	}
+	return &bestFood, nil
 }
-
-// // Find the best food, the one we are closest
-// // to compared to all other snakes
-// func (bm BoardManager) findBestFood() BestFoodResult {
-// 	best := make(map[Point]Point)
-// 	differential := make(map[Point]int) // how much closer the person is than all other snakes
-// 	for _, food := range bm.Req.Food {
-// 		if distance(food, bm.OurHead) < bm.Req.You.Health {
-// 			for _, snake := range bm.Req.Snakes {
-// 				_, exists := best[food]
-// 				if exists == true {
-// 					if distance(best[food], food) > distance(snake.Head(), food) && (best[food] != food) {
-// 						differential[food] = distance(best[food], food) - distance(snake.Head(), food)
-// 						best[food] = snake.Head()
-// 					}
-// 				} else {
-// 					best[food] = snake.Head()
-// 					differential[food] = 15
-// 				}
-// 			}
-// 		}
-// 	}
