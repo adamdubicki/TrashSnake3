@@ -1,0 +1,23 @@
+{
+	"ImportPath": "github.com/adamdubicki/TrashSnake3",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v80",
+	"Deps": [
+		{
+			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/api",
+			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+		},
+		{
+			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/apiEntity",
+			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+		},
+		{
+			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/game",
+			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+		},
+		{
+			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/lib",
+			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+		}
+	]
+}
