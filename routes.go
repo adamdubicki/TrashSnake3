@@ -51,6 +51,9 @@ func move(res http.ResponseWriter, req *http.Request) {
 			fmt.Printf("NO PATH TO FOOD")
 			foodChannel <- ""
 		}
+
+		fmt.Printf("%v+\n", PathAllowsLoopToTail(*manager, path))
+
 		foodChannel <- lib.DirectionFromCoords(manager.OurHead, path[1])
 	}()
 

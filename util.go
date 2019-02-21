@@ -2,10 +2,13 @@ package main
 
 import (
 	"errors"
+	"fmt"
 
+	"github.com/FreshworksStudio/bs-go-utils/api"
 	"github.com/FreshworksStudio/bs-go-utils/apiEntity"
 	"github.com/FreshworksStudio/bs-go-utils/game"
 	"github.com/FreshworksStudio/bs-go-utils/lib"
+	"github.com/jinzhu/copier"
 )
 
 // FindBestFood - find the food that our snake is closest to
@@ -39,4 +42,35 @@ func FindBestFood(m game.Manager) (*apiEntity.Coord, error) {
 		return nil, errors.New("No valid food")
 	}
 	return &bestFood, nil
+}
+
+func CopyRequest(req api.SnakeRequest) api.SnakeRequest {
+	reqCopy := api.SnakeRequest{}
+	copier.Copy(&reqCopy, &req)
+	return reqCopy
+}
+
+func PathAllowsLoopToTail(manager game.Manager, path game.Path) bool {
+	// If the head === tail, we can loop
+	if len(manager.Req.You.Body) == 1 {
+		return true
+	}
+
+	reqCopy := CopyRequest(*manager.Req)
+	reqCopy.You.Body = make([]apiEntity.Coord, 0)
+	fmt.Printf("%v+, %v+, %v+", manager.Req.You.Body, path, ProjectSnakeAlongPath(path, manager.Req.You))
+	return true
+}
+
+func ProjectSnakeAlongPath(path game.Path, snake apiEntity.Snake) game.Path {
+	if len(path) < len(snake.Body) {
+		p := make(game.Path, 0)
+		p = append(p, path[:len(path)]...)
+		p = append(p, snake.Body[:(len(snake.Body)-len(path))+1]...)
+		return p
+	} else if len(path) > len(snake.Body) {
+		return path[:len(snake.Body)]
+	}
+
+	return path
 }

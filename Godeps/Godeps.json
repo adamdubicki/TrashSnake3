@@ -5,19 +5,23 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/api",
-			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+			"Rev": "f71f1ddaa60b00f26d1a4d84d64fbff4dba485c8"
 		},
 		{
 			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/apiEntity",
-			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+			"Rev": "f71f1ddaa60b00f26d1a4d84d64fbff4dba485c8"
 		},
 		{
 			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/game",
-			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+			"Rev": "f71f1ddaa60b00f26d1a4d84d64fbff4dba485c8"
 		},
 		{
 			"ImportPath": "github.com/FreshworksStudio/bs-go-utils/lib",
-			"Rev": "3d3964004a22ad1b4d2f1a956e7eb132a8ce6990"
+			"Rev": "f71f1ddaa60b00f26d1a4d84d64fbff4dba485c8"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/copier",
+			"Rev": "7e38e58719c33e0d44d585c4ab477a30f8cb82dd"
 		}
 	]
 }
