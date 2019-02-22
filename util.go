@@ -56,21 +56,40 @@ func PathAllowsLoopToTail(manager game.Manager, path game.Path) bool {
 		return true
 	}
 
+	// Create fake copy of request with projected path
 	reqCopy := CopyRequest(*manager.Req)
-	reqCopy.You.Body = make([]apiEntity.Coord, 0)
-	fmt.Printf("%v+, %v+, %v+", manager.Req.You.Body, path, ProjectSnakeAlongPath(path, manager.Req.You))
+	projectedPath := ProjectSnakeAlongPath(manager.Req.You, path)
+	reqCopy.You.Body = projectedPath
+	reqCopy.Board.Snakes = make([]apiEntity.Snake, 0)
+	for _, snake := range manager.Req.Board.Snakes {
+		if snake.ID == manager.Req.You.ID {
+			reqCopy.Board.Snakes = append(reqCopy.Board.Snakes, reqCopy.You)
+		} else {
+			reqCopy.Board.Snakes = append(reqCopy.Board.Snakes, snake)
+		}
+	}
+
+	projectedManager := game.InitializeBoard(&reqCopy)
+	_, noPathToTail := projectedManager.FindPath(manager.OurHead, manager.Req.You.Body[len(manager.Req.You.Body)-1])
+	if noPathToTail != nil {
+		return false
+	}
+
 	return true
 }
 
-func ProjectSnakeAlongPath(path game.Path, snake apiEntity.Snake) game.Path {
+func ProjectSnakeAlongPath(snake apiEntity.Snake, path game.Path) game.Path {
+	p := make(game.Path, 0)
+	fmt.Printf("%v, %v\n", snake.Body, path)
 	if len(path) < len(snake.Body) {
-		p := make(game.Path, 0)
 		p = append(p, path[:len(path)]...)
-		p = append(p, snake.Body[:(len(snake.Body)-len(path))+1]...)
+		p = game.ReversePath(p)
+		p = append(p, snake.Body[1:(len(snake.Body)-len(path)+1)]...)
 		return p
 	} else if len(path) > len(snake.Body) {
-		return path[:len(snake.Body)]
+		p = append(p, path[len(snake.Body):]...)
+		return game.ReversePath(p)
 	}
-
-	return path
+	p = append(p, path[:len(path)]...)
+	return game.ReversePath(p)
 }
