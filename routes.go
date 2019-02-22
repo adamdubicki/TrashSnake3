@@ -70,6 +70,7 @@ func move(res http.ResponseWriter, req *http.Request) {
 		if manager.Req.You.Body[0] == manager.Req.You.Body[1] {
 			tailChannel <- ""
 		}
+		fmt.Printf(manager.OurHead, manager.Req.You.Body[len(manager.Req.You.Body)-1)
 		path, noPathToTail := manager.FindPath(manager.OurHead, manager.Req.You.Body[len(manager.Req.You.Body)-1])
 		if noPathToTail != nil || len(path) < 2 {
 			fmt.Printf("No path to food\n")

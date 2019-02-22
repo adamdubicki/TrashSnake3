@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/FreshworksStudio/bs-go-utils/api"
 	"github.com/FreshworksStudio/bs-go-utils/apiEntity"
@@ -80,7 +79,6 @@ func PathAllowsLoopToTail(manager game.Manager, path game.Path) bool {
 
 func ProjectSnakeAlongPath(snake apiEntity.Snake, path game.Path) game.Path {
 	p := make(game.Path, 0)
-	fmt.Printf("%v, %v\n", snake.Body, path)
 	if len(path) < len(snake.Body) {
 		p = append(p, path[:len(path)]...)
 		p = game.ReversePath(p)
